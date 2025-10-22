@@ -1,11 +1,6 @@
 import React from "react";
 import TaskCard from "./TaskCard";
-
-interface Task {
-    id_task: number;
-    title: string;
-    description: string;
-}
+import { Task } from "../pages/HomePage"; // Reuse the Task interface from HomePage
 
 interface TaskListProps {
     tasks: Task[];

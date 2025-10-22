@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import TaskForm from "../components/TaskForm";
 import TaskList from "../components/TaskList";
 
-interface Task {
+export interface Task {
   id_task: number;
   title: string;
   description: string;
+  status: number; 
 }
 
 const HomePage: React.FC = () => {
