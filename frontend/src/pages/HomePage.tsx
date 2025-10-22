@@ -12,22 +12,24 @@ const HomePage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+
   const fetchTasks = async () => {
-    const res = await fetch("http://localhost:3000/api/tasks");
+    const res = await fetch(`${backendUrl}/api/tasks`);
     const data = await res.json();
     setTasks(data);
   };
 
   const handleAdd = async (title: string, description: string) => {
     if (editingTask) {
-      await fetch(`http://localhost:3000/api/tasks/${editingTask.id_task}`, {
+      await fetch(`${backendUrl}/api/tasks/${editingTask.id_task}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description }),
       });
       setEditingTask(null);
     } else {
-      await fetch("http://localhost:3000/api/tasks", {
+      await fetch(`${backendUrl}/api/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description }),
@@ -37,7 +39,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    await fetch(`http://localhost:3000/api/tasks/${id}`, { method: "DELETE" });
+    await fetch(`${backendUrl}/api/tasks/${id}`, { method: "DELETE" });
     fetchTasks();
   };
 

@@ -9,6 +9,17 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ id_task, title, description, onDelete, onEdit }) => {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+
+    fetch(`${backendUrl}/api/tasks`)
+        .then(response => response.json())
+        .then(() => {
+            // Handle the response data if needed
+        })
+        .catch(error => {
+            console.error('Error fetching tasks:', error);
+        });
+
     return (
         <div className="bg-white shadow-md rounded-lg p-4 flex flex-col gap-2">
             <h3 className="text-xl font-bold text-gray-800">{title}</h3>
