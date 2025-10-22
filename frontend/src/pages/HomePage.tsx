@@ -44,8 +44,8 @@ const HomePage: React.FC = () => {
     fetchTasks();
   };
 
-  const handleEdit = (task: Task) => {
-    setEditingTask(task);
+  const handleEdit = (task: { id_task: number; title: string; description: string }) => {
+    setEditingTask({ ...task, status: 0 });
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const HomePage: React.FC = () => {
       <div className="max-w-3xl mx-auto">
         <TaskForm
           onAdd={handleAdd}
-          initialData={editingTask}
+          initialData={editingTask ? { ...editingTask, status: editingTask.status === 1 ? "pending" : "complete" } : null}
           onCancel={() => setEditingTask(null)}
         />
         <div className="mt-6">

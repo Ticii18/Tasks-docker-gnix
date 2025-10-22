@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 export interface Task {
     title: string;
     description: string;
-    status: number;
+    status: string; // Change status to string to match database values
 }
 
 interface TaskFormProps {
-    onAdd: (title: string, description: string, status: number) => void;
+    onAdd: (title: string, description: string, status: string) => void;
     initialData?: Task | null;
     onCancel?: () => void;
 }
@@ -16,7 +16,7 @@ interface TaskFormProps {
 const TaskForm: React.FC<TaskFormProps> = ({ onAdd, initialData, onCancel }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [status, setStatus] = useState(1); // Default status
+    const [status, setStatus] = useState("pending"); // Default status
 
     useEffect(() => {
         if (initialData) {
@@ -26,7 +26,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAdd, initialData, onCancel }) => 
         } else {
             setTitle("");
             setDescription("");
-            setStatus(1);
+            setStatus("pending");
         }
     }, [initialData]);
 
@@ -36,7 +36,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAdd, initialData, onCancel }) => 
         onAdd(title, description, status);
         setTitle("");
         setDescription("");
-        setStatus(1);
+        setStatus("pending");
     };
 
     return (
@@ -59,12 +59,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAdd, initialData, onCancel }) => 
             />
             <select
                 value={status}
-                onChange={(e) => setStatus(Number(e.target.value))}
+                onChange={(e) => setStatus(e.target.value)}
                 className="border border-gray-300 rounded-lg px-3 py-2"
             >
-                <option value={1}>Pending</option>
-                <option value={2}>In Progress</option>
-                <option value={3}>Completed</option>
+                <option value="pending">Pending</option>
+                <option value="complete">Complete</option>
             </select>
             <div className="flex gap-2">
                 <button

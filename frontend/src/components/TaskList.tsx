@@ -1,11 +1,11 @@
 import React from "react";
 import TaskCard from "./TaskCard";
-import { Task } from "../pages/HomePage"; // Reuse the Task interface from HomePage
+import type { Task } from "../pages/HomePage"; 
 
 interface TaskListProps {
     tasks: Task[];
     onDelete: (id: number) => void;
-    onEdit: (task: Task) => void;
+    onEdit: (task: { id_task: number; title: string; description: string }) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onDelete, onEdit }) => {
