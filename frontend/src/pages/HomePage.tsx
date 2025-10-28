@@ -6,7 +6,7 @@ export interface Task {
   id_task: number;
   title: string;
   description: string;
-  status: number; 
+  status: any;
 }
 
 const HomePage: React.FC = () => {
@@ -21,19 +21,19 @@ const HomePage: React.FC = () => {
     setTasks(data);
   };
 
-  const handleAdd = async (title: string, description: string) => {
+  const handleAdd = async (title: string, description: string, status?: string) => {
     if (editingTask) {
       await fetch(`${backendUrl}/api/tasks/${editingTask.id_task}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title, description, status }),
       });
       setEditingTask(null);
     } else {
       await fetch(`${backendUrl}/api/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title, description, status }),
       });
     }
     fetchTasks();
@@ -44,13 +44,25 @@ const HomePage: React.FC = () => {
     fetchTasks();
   };
 
-  const handleEdit = (task: { id_task: number; title: string; description: string }) => {
-    setEditingTask({ ...task, status: 0 });
+  const handleEdit = (task: { id_task: number; title: string; description: string; status?: number }) => {
+    // Preserve incoming status if provided, otherwise default to 0 (complete)
+    setEditingTask({ ...task, status: task.status ?? 0 });
   };
 
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  const normalizeToString = (status: any) => {
+    if (status == null) return 'complete';
+    if (typeof status === 'string') return status;
+    if (typeof status === 'number') return status === 1 ? 'pending' : 'complete';
+    if (typeof status === 'object') {
+      if ('status' in status && typeof status.status === 'string') return status.status;
+      if ('id_status' in status && typeof status.id_status === 'number') return status.id_status === 1 ? 'pending' : 'complete';
+    }
+    return 'complete';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -58,7 +70,7 @@ const HomePage: React.FC = () => {
       <div className="max-w-3xl mx-auto">
         <TaskForm
           onAdd={handleAdd}
-          initialData={editingTask ? { ...editingTask, status: editingTask.status === 1 ? "pending" : "complete" } : null}
+          initialData={editingTask ? { ...editingTask, status: normalizeToString(editingTask.status) } : null}
           onCancel={() => setEditingTask(null)}
         />
         <div className="mt-6">

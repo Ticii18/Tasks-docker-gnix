@@ -5,7 +5,7 @@ import type { Task } from "../pages/HomePage";
 interface TaskListProps {
     tasks: Task[];
     onDelete: (id: number) => void;
-    onEdit: (task: { id_task: number; title: string; description: string }) => void;
+    onEdit: (task: { id_task: number; title: string; description: string; status?: number }) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onDelete, onEdit }) => {
